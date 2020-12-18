@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 
 namespace InvoiceApp.Models
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        private readonly DbContextOptions _options;
-
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
-            _options = options;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
