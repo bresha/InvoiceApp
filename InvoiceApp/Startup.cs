@@ -29,7 +29,7 @@ namespace InvoiceApp
             string connectionString = Configuration.GetConnectionString("default");
             services.AddDbContext<ApplicationDbContext>(c => c.UseSqlServer(connectionString));
 
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddControllersWithViews();
         }
