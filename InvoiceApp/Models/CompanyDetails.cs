@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceApp.Models
 {
-    public class UserCompanyDetails
+    public class CompanyDetails
     {
         public int Id { get; set; }
 
@@ -33,6 +33,11 @@ namespace InvoiceApp.Models
         [StringLength(255)]
         public string Country { get; set; }
 
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "VAT Number")]
+        public string VATNumber { get; set; }
+
         [StringLength(50)]
         [DataType(DataType.PhoneNumber)]
         [Display(Name = "Company Phone")]
@@ -42,10 +47,5 @@ namespace InvoiceApp.Models
         [EmailAddress]
         [Display(Name = "Company Email")]
         public string Email { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        [Display(Name = "VAT Number")]
-        public string VATNumber { get; set; }
     }
 }

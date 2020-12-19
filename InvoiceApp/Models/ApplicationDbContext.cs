@@ -9,7 +9,7 @@ namespace InvoiceApp.Models
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<UserCompanyDetails> CompanyDetails { get; set; }
+        public DbSet<CompanyDetails> CompanyDetails { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
