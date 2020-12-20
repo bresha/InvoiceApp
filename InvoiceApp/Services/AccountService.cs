@@ -1,6 +1,7 @@
 ﻿using InvoiceApp.Constants;
 using InvoiceApp.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace InvoiceApp.Services
         private readonly ILogger<AccountService> _logger;
 
         public AccountService(
-            ApplicationDbContext context, 
+            ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             ILogger<AccountService> logger)
         {
@@ -55,7 +56,7 @@ namespace InvoiceApp.Services
                         else
                         {
                             _context.CompanyDetails.Add(model.CompanyDetails);
-                            
+
                             var resultOfAddingCompanyDetails = await _context.SaveChangesAsync();
 
                             if (resultOfAddingCompanyDetails != 1)
@@ -77,6 +78,16 @@ namespace InvoiceApp.Services
             }
 
             return results;
+        }
+
+        public async Task<bool> CheckIsAnyAdmin()
+        {
+            return await (from users in _context.Users
+                          join userroles in _context.UserRoles on users.Id equals userroles.UserId
+                          join roles in _context.Roles on userroles.RoleId equals roles.Id
+                          where roles.Name == Roles.Admin
+                          select users).AnyAsync();
+
         }
     }
 }

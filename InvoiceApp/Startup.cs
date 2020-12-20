@@ -36,12 +36,12 @@ namespace InvoiceApp
 
             services.AddControllersWithViews();
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.FallbackPolicy = new AuthorizationPolicyBuilder()
-            //                                    .RequireAuthenticatedUser()
-            //                                    .Build();
-            //});
+            services.AddAuthorization(options =>
+            {
+                options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                                                .RequireAuthenticatedUser()
+                                                .Build();
+            });
 
             services.AddScoped<IAccountService, AccountService>();
         }

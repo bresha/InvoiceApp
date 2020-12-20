@@ -1,6 +1,7 @@
 ﻿using InvoiceApp.Constants;
 using InvoiceApp.Models;
 using InvoiceApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceApp.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -23,9 +25,12 @@ namespace InvoiceApp.Controllers
             _accountService = accountService;
         }
 
-        public IActionResult Register()
+        [HttpGet]
+        public async Task<IActionResult> Register()
         {
-            // TODO: Add logic for disabling registration where is an admin
+            if (await _accountService.CheckIsAnyAdmin())
+                return RedirectToAction("Login", "Account");
+            
             return View();
         }
 
@@ -59,6 +64,42 @@ namespace InvoiceApp.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Login()
+        {
+            if (await _accountService.CheckIsAnyAdmin())
+            {
+                return View();
+            }
+
+            return RedirectToAction("Register", "Account");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel user)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(user.Email, user.Password, user.RememberMe, false);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
+
+            }
+
+            return View(user);
+        }
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+
+            return RedirectToAction("Login");
         }
     }
 }
