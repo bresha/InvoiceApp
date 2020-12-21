@@ -38,9 +38,7 @@ namespace InvoiceApp.Services
                     if (!resultOfCreatingUser.Succeeded)
                     {
                         foreach (var error in resultOfCreatingUser.Errors)
-                        {
                             results.Add(error.Description);
-                        }
                     }
                     else
                     {
@@ -49,24 +47,15 @@ namespace InvoiceApp.Services
                         if (!resultOfAddingAdminRole.Succeeded)
                         {
                             foreach (var error in resultOfAddingAdminRole.Errors)
-                            {
                                 results.Add(error.Description);
-                            }
                         }
                         else
                         {
                             _context.CompanyDetails.Add(model.CompanyDetails);
 
-                            var resultOfAddingCompanyDetails = await _context.SaveChangesAsync();
+                            await _context.SaveChangesAsync();
 
-                            if (resultOfAddingCompanyDetails != 1)
-                            {
-                                results.Add("Failed to add company details.");
-                            }
-                            else
-                            {
-                                transaction.Commit();
-                            }
+                            transaction.Commit();
                         }
                     }
                 }
