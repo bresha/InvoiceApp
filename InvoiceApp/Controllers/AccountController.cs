@@ -77,6 +77,7 @@ namespace InvoiceApp.Controllers
             return RedirectToAction("Register", "Account");
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel user)
         {
@@ -90,11 +91,11 @@ namespace InvoiceApp.Controllers
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
-
             }
 
             return View(user);
         }
+
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
