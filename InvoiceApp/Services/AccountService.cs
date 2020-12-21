@@ -72,7 +72,10 @@ namespace InvoiceApp.Services
                 }
                 catch (Exception ex)
                 {
+                    results.Add("Failed to add admin with company detils.");
+
                     _logger.LogError(ex, "Add first user with company details to database failed.");
+
                     await transaction.RollbackAsync();
                 }
             }
