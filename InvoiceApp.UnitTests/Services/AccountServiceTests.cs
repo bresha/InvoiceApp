@@ -1,19 +1,9 @@
 ﻿using InvoiceApp.Constants;
 using InvoiceApp.Models;
 using InvoiceApp.Services;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Moq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace InvoiceApp.UnitTests.Services
 {
@@ -34,7 +24,7 @@ namespace InvoiceApp.UnitTests.Services
 
         public void Dispose()
         {
-            _service.Destroy(_service);
+            AppServiceCollection.Destroy(_service);
         }
 
         [Fact]
