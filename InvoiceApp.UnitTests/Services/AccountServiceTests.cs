@@ -23,9 +23,8 @@ namespace InvoiceApp.UnitTests.Services
         private readonly CompanyDetails _companyDetails;
         private readonly RegisterFormViewModel _model;
         private readonly ApplicationUser _user;
-        private readonly ITestOutputHelper _outputHelper;
 
-        public AccountServiceTests(ITestOutputHelper outputHelper)
+        public AccountServiceTests()
         {
             _service = new AppServiceCollection();
 
@@ -55,7 +54,6 @@ namespace InvoiceApp.UnitTests.Services
                 FirstName = _model.FirstName,
                 LastName = _model.LastName
             };
-            _outputHelper = outputHelper;
         }
 
         public void Dispose()
