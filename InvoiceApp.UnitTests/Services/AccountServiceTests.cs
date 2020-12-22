@@ -20,7 +20,6 @@ namespace InvoiceApp.UnitTests.Services
     public class AccountServiceTests : IDisposable
     {
         private readonly AppServiceCollection _service;
-        private readonly CompanyDetails _companyDetails;
         private readonly RegisterFormViewModel _model;
         private readonly ApplicationUser _user;
 
@@ -28,32 +27,9 @@ namespace InvoiceApp.UnitTests.Services
         {
             _service = new AppServiceCollection();
 
-            _companyDetails = new CompanyDetails
-            {
-                Name = "a",
-                Address = "a",
-                PostalCode = "1",
-                City = "a",
-                Country = "a",
-                VATNumber = "1"
-            };
-
-            _model = new RegisterFormViewModel
-            {
-                FirstName = "a",
-                LastName = "a",
-                Email = "a@b.c",
-                Password = "!Abcd1",
-                CompanyDetails = _companyDetails
-            };
-
-            _user = new ApplicationUser
-            {
-                UserName = _model.Email,
-                Email = _model.Email,
-                FirstName = _model.FirstName,
-                LastName = _model.LastName
-            };
+            var registerData = new RegisterData();
+            _model = registerData.Model;
+            _user = registerData.User;
         }
 
         public void Dispose()
