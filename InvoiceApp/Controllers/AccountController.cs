@@ -28,8 +28,12 @@ namespace InvoiceApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Register()
         {
-            if (await _accountService.CheckIsAnyAdmin())
+            var result = await _accountService.CheckIsAnyAdmin();
+
+            if (result)
+            {
                 return RedirectToAction("Login", "Account");
+            }
             
             return View();
         }
@@ -69,7 +73,9 @@ namespace InvoiceApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Login()
         {
-            if (await _accountService.CheckIsAnyAdmin())
+            var result = await _accountService.CheckIsAnyAdmin();
+
+            if (result)
             {
                 return View();
             }

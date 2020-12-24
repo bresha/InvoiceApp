@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace InvoiceApp.UnitTests
+namespace InvoiceApp.UnitTests.TestHelpers
 {
     class RegisterData
     {

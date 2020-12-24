@@ -1,6 +1,7 @@
 ﻿using InvoiceApp.Controllers;
 using InvoiceApp.Models;
 using InvoiceApp.Services;
+using InvoiceApp.UnitTests.TestHelpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -12,18 +13,19 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace InvoiceApp.UnitTests.Controllers
 {
     public class AccountControllerTests
     {
-        private readonly ITestOutputHelper _outputHelper;
         private readonly RegisterData _registerData;
+        private readonly LoginViewModel _loginData;
 
-        public AccountControllerTests(ITestOutputHelper outputHelper)
+        public AccountControllerTests()
         {
-            _outputHelper = outputHelper;
             _registerData = new RegisterData();
+            _loginData = new LoginViewModel { Email = "a.b@c", Password = "!Abcd1", RememberMe = false };
         }
 
         [Fact]
@@ -48,9 +50,8 @@ namespace InvoiceApp.UnitTests.Controllers
             var controller = new AccountController(mockSignInManager.Object, mockService.Object);
 
             var result = await controller.Register();
-            Assert.IsType<RedirectToActionResult>(result);
 
-            var resultOfRedirect = (RedirectToActionResult)result;
+            var resultOfRedirect = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Login", resultOfRedirect.ActionName);
             Assert.Equal("Account", resultOfRedirect.ControllerName);
         }
@@ -60,23 +61,27 @@ namespace InvoiceApp.UnitTests.Controllers
         {
             List<string> list = new List<string>();
             var mockService = new Mock<IAccountService>();
-            mockService.Setup(s => s
-            .AddFirstUserWithCompanyDetails(It.IsAny<ApplicationUser>(), It.IsAny<RegisterFormViewModel>()))
+            mockService.Setup(
+                s => s.AddFirstUserWithCompanyDetails(It.IsAny<ApplicationUser>(), It.IsAny<RegisterFormViewModel>()))
                 .ReturnsAsync(list);
             var mockSignInManager = GetMockSignInManager();
             var controller = new AccountController(mockSignInManager.Object, mockService.Object);
 
             var result = await controller.Register(_registerData.Model);
-            Assert.IsType<RedirectToActionResult>(result);
+
+            mockSignInManager.Verify(m => m.SignInAsync(It.IsAny<ApplicationUser>(), false, It.IsAny<string>()), Times.Once);
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Index", redirectResult.ActionName);
+            Assert.Equal("Home", redirectResult.ControllerName);
         }
 
         [Fact]
-        public async Task Register_ModedStateIsInvalid_ReturnsView()
+        public async Task Register_ModedStateIsInvalid_ReturnsViewWithErorsInModelState()
         {
             List<string> list = new List<string> { "a", "b" };
             var mockService = new Mock<IAccountService>();
-            mockService.Setup(s => s
-            .AddFirstUserWithCompanyDetails(It.IsAny<ApplicationUser>(), It.IsAny<RegisterFormViewModel>()))
+            mockService.Setup(
+                s => s.AddFirstUserWithCompanyDetails(It.IsAny<ApplicationUser>(), It.IsAny<RegisterFormViewModel>()))
                 .ReturnsAsync(list);
             var mockSignInManager = GetMockSignInManager();
             var controller = new AccountController(mockSignInManager.Object, mockService.Object);
@@ -84,8 +89,82 @@ namespace InvoiceApp.UnitTests.Controllers
             var result = await controller.Register(_registerData.Model);
 
             var viewResult = Assert.IsType<ViewResult>(result);
-            var numberOfErrors = viewResult.ViewData.ModelState.ErrorCount;
-            Assert.Equal(2, numberOfErrors);
+            Assert.Equal(2, viewResult.ViewData.ModelState.ErrorCount);
+            Assert.IsType<RegisterFormViewModel>(viewResult.ViewData.Model);
+        }
+
+        [Fact]
+        public async Task Login_ThereIsAnAdmin_ReturnsDefaultView()
+        {
+            var mockService = new Mock<IAccountService>();
+            mockService.Setup(s => s.CheckIsAnyAdmin()).ReturnsAsync(true);
+            var mockSignInManager = GetMockSignInManager();
+            var controller = new AccountController(mockSignInManager.Object, mockService.Object);
+
+            var result = await controller.Login();
+
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async Task Login_ThereIsNoAdmin_RedirectsToRegister()
+        {
+            var mockService = new Mock<IAccountService>();
+            mockService.Setup(m => m.CheckIsAnyAdmin()).ReturnsAsync(false);
+            var mockSignInManager = GetMockSignInManager();
+            var controller = new AccountController(mockSignInManager.Object, mockService.Object);
+
+            var result = await controller.Login();
+
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Register", redirectResult.ActionName);
+            Assert.Equal("Account", redirectResult.ControllerName);
+        }
+
+        [Fact]
+        public async Task Login_SignInUserSuccessful_RedirectToIndexOfHomeController()
+        {
+            var mockService = new Mock<IAccountService>();
+            var mockSignInManager = GetMockSignInManager();
+            mockSignInManager.Setup(
+                m => m.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.Success);
+            var controller = new AccountController(mockSignInManager.Object, mockService.Object);
+
+            var result = await controller.Login(_loginData);
+
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Index", redirectResult.ActionName);
+            Assert.Equal("Home", redirectResult.ControllerName);
+        }
+
+        [Fact]
+        public async Task Login_SignInUserUnsuccessful_ReturnsDefaultViewWithModelAndAnErrorInModelState()
+        {
+            var mockService = new Mock<IAccountService>();
+            var mockSignInManager = GetMockSignInManager();
+            mockSignInManager.Setup(
+                m => m.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(SignInResult.Failed);
+            var controller = new AccountController(mockSignInManager.Object, mockService.Object);
+
+            var result = await controller.Login(_loginData);
+
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal(1, viewResult.ViewData.ModelState.ErrorCount);
+            Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);                 
+        }
+
+        [Fact]
+        public async Task Logout_IsCalled_SignsOutUser()
+        {
+            var mockService = new Mock<IAccountService>();
+            var mockSignInManager = GetMockSignInManager();
+            var controller = new AccountController(mockSignInManager.Object, mockService.Object);
+
+            var result = await controller.Logout();
+
+            mockSignInManager.Verify(m => m.SignOutAsync(), Times.Once);
         }
 
         private Mock<SignInManager<ApplicationUser>> GetMockSignInManager()
