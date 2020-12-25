@@ -156,7 +156,7 @@ namespace InvoiceApp.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task Logout_IsCalled_SignsOutUser()
+        public async Task Logout_IsCalled_SignsOutUserAndRedirectsToLogin()
         {
             var mockService = new Mock<IAccountService>();
             var mockSignInManager = GetMockSignInManager();
@@ -165,6 +165,9 @@ namespace InvoiceApp.UnitTests.Controllers
             var result = await controller.Logout();
 
             mockSignInManager.Verify(m => m.SignOutAsync(), Times.Once);
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Login", redirectResult.ActionName);
+            Assert.Equal("Account", redirectResult.ControllerName);
         }
 
         private Mock<SignInManager<ApplicationUser>> GetMockSignInManager()

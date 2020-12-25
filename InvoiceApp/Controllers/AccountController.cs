@@ -1,11 +1,8 @@
-﻿using InvoiceApp.Constants;
-using InvoiceApp.Models;
+﻿using InvoiceApp.Models;
 using InvoiceApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -106,7 +103,7 @@ namespace InvoiceApp.Controllers
         {
             await _signInManager.SignOutAsync();
 
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", "Account");
         }
     }
 }
