@@ -1,3 +1,4 @@
+using AutoMapper;
 using InvoiceApp.Models;
 using InvoiceApp.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -34,8 +35,6 @@ namespace InvoiceApp
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddControllersWithViews();
-
             services.AddAuthorization(options =>
             {
                 options.FallbackPolicy = new AuthorizationPolicyBuilder()
@@ -43,7 +42,12 @@ namespace InvoiceApp
                                                 .Build();
             });
 
+            services.AddAutoMapper(typeof(Startup));
+
+            services.AddControllersWithViews();
+
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

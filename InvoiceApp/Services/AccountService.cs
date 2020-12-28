@@ -1,5 +1,6 @@
 ﻿using InvoiceApp.Constants;
 using InvoiceApp.Models;
+using InvoiceApp.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

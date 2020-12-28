@@ -2,6 +2,7 @@
 using InvoiceApp.Models;
 using InvoiceApp.Services;
 using InvoiceApp.UnitTests.TestHelpers;
+using InvoiceApp.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

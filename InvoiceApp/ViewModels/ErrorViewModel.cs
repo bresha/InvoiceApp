@@ -1,6 +1,6 @@
 using System;
 
-namespace InvoiceApp.Models
+namespace InvoiceApp.ViewModels
 {
     public class ErrorViewModel
     {

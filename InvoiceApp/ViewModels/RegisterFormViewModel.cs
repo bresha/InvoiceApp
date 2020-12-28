@@ -1,10 +1,11 @@
-﻿using System;
+﻿using InvoiceApp.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InvoiceApp.Models
+namespace InvoiceApp.ViewModels
 {
     public class RegisterFormViewModel
     {

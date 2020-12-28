@@ -20,6 +20,9 @@ namespace InvoiceApp.Models
 
         public DateTime PaymentDue { get; set; }
 
+        [Required]
+        public byte VATPercentage { get; set; }
+
         public List<InvoiceItem> InvoiceItems { get; set; }
     }
 }

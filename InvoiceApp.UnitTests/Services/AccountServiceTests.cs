@@ -2,6 +2,7 @@
 using InvoiceApp.Models;
 using InvoiceApp.Services;
 using InvoiceApp.UnitTests.TestHelpers;
+using InvoiceApp.ViewModels;
 using System;
 using System.Threading.Tasks;
 using Xunit;
