@@ -84,7 +84,14 @@ namespace InvoiceApp.Services
         private async Task<Company> GetCompanyAsync(Company company)
         {
             var output = await _context.Companies.SingleOrDefaultAsync(
-                c => c.Name == company.Name && c.VATNumber == company.VATNumber);
+                c => c.Name == company.Name && 
+                c.VATNumber == company.VATNumber &&
+                c.Address == company.Address &&
+                c.PostalCode == company.PostalCode &&
+                c.City == company.City &&
+                c.Country == company.Country &&
+                c.Email == company.Email &&
+                c.Phone == company.Phone);
 
             return output;
         }
