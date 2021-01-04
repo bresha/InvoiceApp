@@ -69,3 +69,21 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.twitter-typeahead {
+    display: block !important;
+}
+
+.tt-menu {
+    background-color: #BFDEFF;
+    font-size: larger;
+    right: 0px;
+}
+
+.tt-suggestion {
+    padding: 5px;
+}
+
+.tt-cursor {
+    background-color: #0069D9;
+}

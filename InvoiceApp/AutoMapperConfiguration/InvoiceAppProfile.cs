@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InvoiceApp.Dtos;
 using InvoiceApp.Models;
 using InvoiceApp.ViewModels;
 using System;
@@ -15,6 +16,7 @@ namespace InvoiceApp.AutoMapperConfiguration
             CreateMap<NewInvoiceViewModel, Invoice>();
             CreateMap<CompanyViewModel, Company>();
             CreateMap<InvoiceItemViewModel, InvoiceItem>();
+            CreateMap<Company, CompanyDto>();
         }
     }
 }

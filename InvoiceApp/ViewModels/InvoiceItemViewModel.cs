@@ -18,7 +18,7 @@ namespace InvoiceApp.ViewModels
 
         [Required]
         [Display(Name = "Unit price without tax")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Value for {0} must be greater than {1}.")]
+        [Range(0.01, (double) decimal.MaxValue, ErrorMessage = "Value for {0} must be greater than {1}.")]
         public decimal UnitPriceWithoutTax { get; set; }
     }
 }

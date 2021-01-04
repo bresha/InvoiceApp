@@ -38,10 +38,12 @@ namespace InvoiceApp.ViewModels
 
         [StringLength(50, MinimumLength = 3)]
         [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Phone (optional)")]
         public string Phone { get; set; }
 
         [StringLength(255, MinimumLength = 3)]
         [EmailAddress]
+        [Display(Name = "Email (optional)")]
         public string Email { get; set; }
     }
 }

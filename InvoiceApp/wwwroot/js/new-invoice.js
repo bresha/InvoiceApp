@@ -1,9 +1,58 @@
 ﻿$(document).ready(function () {
+    enableSuggestions();
+    changeTotals();
     $("#add-item").on("click", addNewInvoiceItem);
     $("#invoice-items-list").on("click", ".js-delete", deleteInvoiceItem);
     $("#invoice-items-list").on("change keyup cut paste", ".js-change", saveValue);
     $("form").on("change keyup cut paste", ".js-calculate", changeTotals);
-})
+    $("#Company_Name").on("change keyup cut paste", removeData);
+});
+
+var enableSuggestions = function () {
+    var companies = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {
+            url: '/api/company?query=%QUERY',
+            wildcard: '%QUERY'
+        }
+    });
+
+    $("#Company_Name").typeahead({
+        minLength: 1,
+        highlight: true,
+        hint: false,
+        autoSelect: false
+    },
+    {
+        name: 'companies',
+        display: 'name',
+        source: companies,
+        limit: Infinity
+    }).on("typeahead:select typeahead:autocomplete", function (event, company) {
+        $("#Company_Address").val(company.address).prop("readonly", true);
+        $("#Company_PostalCode").val(company.postalCode).prop("readonly", true);
+        $("#Company_City").val(company.city).prop("readonly", true);
+        $("#Company_Country").val(company.country).prop("readonly", true);
+        $("#Company_VATNumber").val(company.vatNumber).prop("readonly", true);
+        $("#Company_Phone").val(company.phone).prop("readonly", true);
+        $("#Company_Email").val(company.email).prop("readonly", true);
+        $(this).attr("savedValue", $(this).val());
+        
+    });
+}
+
+var removeData = function () {
+    if ($(this).attr("savedValue") != $(this).val()) {
+        $("#Company_Address").val(null).prop("readonly", false);
+        $("#Company_PostalCode").val(null).prop("readonly", false);
+        $("#Company_City").val(null).prop("readonly", false);
+        $("#Company_Country").val(null).prop("readonly", false);
+        $("#Company_VATNumber").val(null).prop("readonly", false);
+        $("#Company_Phone").val(null).prop("readonly", false);
+        $("#Company_Email").val(null).prop("readonly", false);
+    }
+}
 
 var addNewInvoiceItem = function () {
     var container = $("#invoice-items-list");
@@ -31,8 +80,8 @@ var addNewInvoiceItem = function () {
                                 </div>
                             </div>
                         </li>`
-    item = item.replace(/\[#\]/g, '[' + index + ']');
-    item = item.replace(/_#__/g, '_' + index + '__');
+    item = item.replace(/\[#\]/g, '[' + index + ']')
+        .replace(/_#__/g, '_' + index + '__');
     container.append(item);
     reenableFormValidation();
 }
@@ -100,6 +149,7 @@ var calculateTax = function (totalWithoutTax) {
     var tax = totalWithoutTax * (vat / 100);
     return tax;
 }
+
 var calculateTotal = function (totalWithoutTax, tax) {
     return totalWithoutTax + tax;
 }

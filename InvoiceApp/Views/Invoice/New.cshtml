@@ -7,59 +7,56 @@
 
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="New" method="post">
+        <form asp-action="New" method="post" autocomplete="off">
             <div asp-validation-summary="All" class="text-danger"></div>
             <h2>Company To Bill</h2>
-            <div class="form-group">
-                <label asp-for="Company.Name"></label>
-                <input asp-for="Company.Name" class="form-control" />
-                <span asp-validation-for="Company.Name" class="text-danger"></span>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Company.Name"></label>
+                    <input asp-for="Company.Name" class="form-control" />
+                    <span asp-validation-for="Company.Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Company.Address"></label>
+                    <input asp-for="Company.Address" class="form-control" />
+                    <span asp-validation-for="Company.Address" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Company.Address"></label>
-                <input asp-for="Company.Address" class="form-control" />
-                <span asp-validation-for="Company.Address" class="text-danger"></span>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Company.PostalCode"></label>
+                    <input asp-for="Company.PostalCode" class="form-control" />
+                    <span asp-validation-for="Company.PostalCode" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Company.City"></label>
+                    <input asp-for="Company.City" class="form-control" />
+                    <span asp-validation-for="Company.City" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Company.PostalCode"></label>
-                <input asp-for="Company.PostalCode" class="form-control" />
-                <span asp-validation-for="Company.PostalCode" class="text-danger"></span>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Company.Country"></label>
+                    <input asp-for="Company.Country" class="form-control" />
+                    <span asp-validation-for="Company.Country" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Company.VATNumber"></label>
+                    <input asp-for="Company.VATNumber" class="form-control" />
+                    <span asp-validation-for="Company.VATNumber" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Company.City"></label>
-                <input asp-for="Company.City" class="form-control" />
-                <span asp-validation-for="Company.City" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.Country"></label>
-                <input asp-for="Company.Country" class="form-control" />
-                <span asp-validation-for="Company.Country" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.VATNumber"></label>
-                <input asp-for="Company.VATNumber" class="form-control" />
-                <span asp-validation-for="Company.VATNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.Phone"></label>
-                <input asp-for="Company.Phone" class="form-control" />
-                <span asp-validation-for="Company.Phone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.Email"></label>
-                <input asp-for="Company.Email" class="form-control" />
-                <span asp-validation-for="Company.Email" class="text-danger"></span>
-            </div>
-            <h2>Invoice Details</h2>
-            <div class="form-group">
-                <label asp-for="PaymentDue"></label>
-                <input asp-for="PaymentDue" class="form-control" />
-                <span asp-validation-for="PaymentDue" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VATPercentage"></label>
-                <input asp-for="VATPercentage" class="form-control js-calculate" />
-                <span asp-validation-for="VATPercentage" class="text-danger"></span>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Company.Phone"></label>
+                    <input asp-for="Company.Phone" class="form-control" />
+                    <span asp-validation-for="Company.Phone" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Company.Email"></label>
+                    <input asp-for="Company.Email" class="form-control" />
+                    <span asp-validation-for="Company.Email" class="text-danger"></span>
+                </div>
             </div>
             <h2>Invoice Items</h2>
             <ul id="invoice-items-list" class="list-group">
@@ -90,24 +87,24 @@
                     }
                     else
                     {
-                        foreach (var invoiceItem in Model.InvoiceItems)
-                        {
+                        for (int i = 0; i < Model.InvoiceItems.Count; i++)
+                        {                        
                             <li class="list-group-item">
                                 <div class="row align-items-end">
                                     <div class="form-group col-md-6">
-                                        <span asp-validation-for="@invoiceItem.Description" class="text-danger"></span><br />
-                                        <label asp-for="@invoiceItem.Description"></label>
-                                        <textarea asp-for="InvoiceItems[0].Description" class="form-control js-change"></textarea>
+                                        <span asp-validation-for="InvoiceItems[i].Description" class="text-danger"></span><br />
+                                        <label asp-for="InvoiceItems[i].Description"></label>
+                                        <textarea asp-for="InvoiceItems[i].Description" class="form-control js-change"></textarea>
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <span asp-validation-for="@invoiceItem.UnitPriceWithoutTax" class="text-danger"></span><br />
-                                        <label asp-for="@invoiceItem.UnitPriceWithoutTax"></label>
-                                        <input asp-for="@invoiceItem.UnitPriceWithoutTax" class="form-control js-change js-calculate" />
+                                        <span asp-validation-for="InvoiceItems[i].UnitPriceWithoutTax" class="text-danger"></span><br />
+                                        <label asp-for="InvoiceItems[i].UnitPriceWithoutTax"></label>
+                                        <input asp-for="InvoiceItems[i].UnitPriceWithoutTax" class="form-control js-change js-calculate" />
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <span asp-validation-for="@invoiceItem.Quantity" class="text-danger"></span><br />
-                                        <label asp-for="@invoiceItem.Quantity"></label>
-                                        <input asp-for="@invoiceItem.Quantity" class="form-control js-change js-calculate" />
+                                        <span asp-validation-for="InvoiceItems[i].Quantity" class="text-danger"></span><br />
+                                        <label asp-for="InvoiceItems[i].Quantity"></label>
+                                        <input asp-for="InvoiceItems[i].Quantity" class="form-control js-change js-calculate" />
                                     </div>
                                     <div class="form-group col-md-2 text-center">
                                         <button type="button" class="btn btn-danger js-delete">Delete Item</button>
@@ -118,33 +115,47 @@
                     }
                 }
             </ul>
-            <div>
+            <div class="form-group text-right">
                 <button type="button" id="add-item" class="btn btn-primary">Add invoice item</button>
             </div>
+            <h2>Invoice Details</h2>
             <div class="row">
-                <p class="col-md-9 text-right">
+                <div class="form-group col-md-6">
+                    <label asp-for="PaymentDue"></label>
+                    <input asp-for="PaymentDue" class="form-control" />
+                    <span asp-validation-for="PaymentDue" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="VATPercentage"></label>
+                    <input asp-for="VATPercentage" class="form-control js-calculate" />
+                    <span asp-validation-for="VATPercentage" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <p class="col-9 text-right h4">
                     Total without tax:
                 </p>
-                <p id="total-without-tax" class="col-md-3 text-right">
+                <p id="total-without-tax" class="col-3 text-right h4">
                     0.00
                 </p>
             </div>
             <div class="row">
-                <p class="col-md-9 text-right">
+                <p class="col-9 text-right h4">
                     Tax:
                 </p>
-                <p id="tax" class="col-md-3 text-right">
+                <p id="tax" class="col-3 text-right h4">
                     0.00
                 </p>
             </div>
             <div class="row">
-                <p class="col-md-9 text-right">
+                <p class="col-9 text-right h4">
                     Total:
                 </p>
-                <p id="total" class="col-md-3 text-right">
+                <p id="total" class="col-3 text-right font-weight-bold h4">
                     0.00
                 </p>
             </div>
+            <hr />
             <div>
                 <button type="submit" class="btn btn-success float-right mt-4">Submit</button>
             </div>
@@ -154,6 +165,7 @@
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");
-       await Html.RenderPartialAsync("_NewInvoiceScriptsPartial"); 
+        await Html.RenderPartialAsync("_TypeaheadScriptsPartial");
+        await Html.RenderPartialAsync("_NewInvoiceScriptsPartial");
      }
 }
